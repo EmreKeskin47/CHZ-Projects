@@ -1,13 +1,16 @@
+import { NativeBalance } from "./../types/NativeBalance";
 import { useCallback, useEffect, useState } from "react";
 import Moralis from "moralis";
-import { EvmChain } from "moralis/common-evm-utils";
 import { TokenBalance } from "@/types/TokenBalance";
 import { useAppContext } from "@/contexts/AppContext";
+import { apiKey } from "@/util/addresses";
+import { current_chain } from "@/util/chain";
 
 export function useBalances() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
+    const [nativeBalance, setNativeBalance] = useState<NativeBalance>();
     const { address } = useAppContext();
 
     const fetchTokenBalance = useCallback(async () => {
@@ -15,18 +18,25 @@ export function useBalances() {
             if (!address) return;
             if (!Moralis.Core.isStarted) {
                 await Moralis.start({
-                    apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
+                    apiKey,
                 });
             }
-            const chain = EvmChain.BSC_TESTNET;
-            const response = await Moralis.EvmApi.token.getWalletTokenBalances({
-                address,
-                chain,
-            });
+            const token_balances =
+                await Moralis.EvmApi.token.getWalletTokenBalances({
+                    address,
+                    chain: current_chain,
+                });
 
-            setTokenBalances(response.toJSON());
+            setTokenBalances(token_balances.toJSON());
+
+            const native_balance =
+                await Moralis.EvmApi.balance.getNativeBalance({
+                    address,
+                    chain: current_chain,
+                });
+            setNativeBalance(native_balance.toJSON());
         } catch (e) {
-            console.error("Error fetching data", e);
+            console.log("Error fetching data", e);
             setMessage("Error fetching data");
         } finally {
             setLoading(false);
@@ -41,5 +51,6 @@ export function useBalances() {
         message,
         loading,
         tokenBalances,
+        nativeBalance,
     };
 }

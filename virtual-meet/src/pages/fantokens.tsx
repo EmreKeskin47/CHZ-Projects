@@ -63,7 +63,7 @@ const TokenCard: FC<TokenData> = (token) => {
     );
 };
 
-function BalancesPage() {
+function FanTokensListPage() {
     const { message, tokens, loading } = useTokenMetadata();
 
     if (loading) return <p>Loading...</p>;
@@ -88,4 +88,4 @@ function BalancesPage() {
     );
 }
 
-export default BalancesPage;
+export default FanTokensListPage;

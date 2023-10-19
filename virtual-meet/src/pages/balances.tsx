@@ -2,6 +2,8 @@ import BackToHub from "@/components/BackToHub";
 import { useBalances } from "@/hooks/useBalances";
 import { TokenBalance } from "@/types/TokenBalance";
 import React, { type FC } from "react";
+import styles from "@/styles/Home.module.css";
+import { formatBalance } from "@/util/formatBalance";
 
 const TokenCard: FC<TokenBalance> = (token) => {
     return (
@@ -45,25 +47,42 @@ const TokenCard: FC<TokenBalance> = (token) => {
 };
 
 function BalancesPage() {
-    const { message, tokenBalances, loading } = useBalances();
+    const { message, tokenBalances, loading, nativeBalance } = useBalances();
 
-    if (loading) return <p>Loading...</p>;
     if (message) return <p>{message}</p>;
     return (
-        <div>
-            <h1 className="my-8 text-center text-3xl font-bold  ">My Tokens</h1>
-            <div className=" mx-4 my-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-                {tokenBalances.map((token, id) => {
-                    return (
-                        <div className="w-full h-full" key={id}>
-                            <TokenCard {...token} />
-                        </div>
-                    );
-                })}
-            </div>
+        <main className={styles.main}>
+            <div className={styles.center}>
+                <div>
+                    <h1 className="my-8 text-center text-3xl font-bold  ">
+                        My Tokens
+                    </h1>
 
-            <BackToHub />
-        </div>
+                    {loading ? (
+                        <div>Loading Token Balances ...</div>
+                    ) : (
+                        <div>
+                            <h2 className="my-8 text-center text-xl font-bold  ">
+                                {`Native Balance is ${formatBalance(
+                                    nativeBalance?.balance
+                                )} `}
+                            </h2>
+                            <div className=" mx-4 my-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                                {tokenBalances.map((token, id) => {
+                                    return (
+                                        <div className="w-full h-full" key={id}>
+                                            <TokenCard {...token} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    <BackToHub />
+                </div>
+            </div>
+        </main>
     );
 }
 

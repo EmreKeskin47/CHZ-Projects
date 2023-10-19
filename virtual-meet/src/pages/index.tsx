@@ -25,12 +25,7 @@ const OptionsGrid = () => {
             <CardLink
                 href="/meet"
                 title="Meet"
-                description="Discover Virtual Meetup exclusive for token holders"
-            />
-            <CardLink
-                href="/vote"
-                title="Proposal"
-                description="Create proposal or vote on an existing one"
+                description="Discover Virtual Meetup for token holders"
             />
             <CardLink
                 href="/fantokens"
@@ -49,12 +44,16 @@ function Hub() {
             <div className={styles.center}>
                 <div>
                     <h1 className="text-6xl font-semibold my-4 text-center">
-                        Welcome to the Hub
+                        Welcome to the Chilliz Hub
                     </h1>
 
-                    <h2 className="text-4xl  mt-14 text-center">
-                        Only Fan Token Holders can vote on <br />
-                        exclusive events and join virtual meetups
+                    <h2 className="text-4xl text-center">
+                        <div className="my-8">
+                            Only Fan Token Holders can vote on
+                        </div>
+                        <div className="mt-8">
+                            exclusive events and join virtual meetups
+                        </div>
                     </h2>
                 </div>
             </div>

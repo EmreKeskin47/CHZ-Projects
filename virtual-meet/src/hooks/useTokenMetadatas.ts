@@ -1,32 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import Moralis from "moralis";
-import { EvmChain } from "moralis/common-evm-utils";
 import { TokenData } from "@/types/TokenData";
+import { apiKey, token_address_list } from "@/util/addresses";
+import { current_chain } from "@/util/chain";
 
 export function useTokenMetadata() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true);
-    const address = "0xC9625A1066c14Db79a08B4Ad9c6561B456326BFf";
     const [tokens, setTokens] = useState<TokenData[]>([]);
 
-    const fetchTokenBalance = useCallback(async () => {
+    const fetchTokenMetadatas = useCallback(async () => {
         try {
-            if (!address) return;
             if (!Moralis.Core.isStarted) {
                 await Moralis.start({
-                    apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
+                    apiKey,
                 });
             }
-            const addresses = [
-                "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-                "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-            ];
-
-            const chain = EvmChain.ETHEREUM;
 
             const response = await Moralis.EvmApi.token.getTokenMetadata({
-                addresses,
-                chain,
+                addresses: token_address_list,
+                chain: current_chain,
             });
 
             setTokens(response.toJSON());
@@ -39,8 +32,8 @@ export function useTokenMetadata() {
     }, []);
 
     useEffect(() => {
-        fetchTokenBalance();
-    }, [fetchTokenBalance]);
+        fetchTokenMetadatas();
+    }, [fetchTokenMetadatas]);
 
     return {
         message,
