@@ -25,7 +25,6 @@ function NFTDetailsPage() {
     });
 
     useEffect(() => {
-        console.log("use effect called");
         if (typeof window !== "undefined") {
             const { id } = router.query;
             setNftID(id as string);

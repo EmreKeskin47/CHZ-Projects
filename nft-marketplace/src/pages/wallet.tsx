@@ -5,8 +5,8 @@ import { useAddress, useOwnedNFTs } from "@thirdweb-dev/react";
 
 export default function Wallet() {
     const { nft_contract } = getNFTContract();
-
     const address = useAddress();
+
     const { data: ownedNFTs, isLoading } = useOwnedNFTs(nft_contract, address);
     return (
         <Layout>
