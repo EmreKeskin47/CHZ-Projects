@@ -1,8 +1,18 @@
-import { useNFTContract } from "@/hooks/useNFTContract";
+import ContractMetadata from "@/components/ContractMetadata";
 import Layout from "@/layout/Layout";
+import { Metadata } from "@/types/metadata";
+import { getMarketplaceContract, getNFTContract } from "@/util/getContracts";
+import { useContractMetadata } from "@thirdweb-dev/react";
 
 export default function Info() {
-    const { loading, metadata, ownerAddress } = useNFTContract();
+    const { marketplace } = getMarketplaceContract();
+    const { nft_contract } = getNFTContract();
+
+    const { data: nft_metadata, isLoading: nftMetadataLoading } =
+        useContractMetadata(nft_contract);
+    const { data: market_metadata, isLoading: marketMetadataLoading } =
+        useContractMetadata(marketplace);
+
     return (
         <Layout>
             <div>
@@ -10,36 +20,23 @@ export default function Info() {
                     Contract Details
                 </h1>
 
-                {loading || !metadata ? (
-                    <div className="text-center">Loading Contract Info..</div>
-                ) : (
-                    <div className=" text-white p-6 rounded-lg shadow-md w-full max-w-2xl mt-6">
-                        <h2 className="font-bold text-xl">Metadata</h2>
-                        <div className="pl-4">
-                            <p>
-                                <strong>Name:</strong> {metadata.name}
-                            </p>
-                            <p>
-                                <strong>Description:</strong>{" "}
-                                {metadata.description}
-                            </p>
-                            <p>
-                                <strong>Symbol:</strong> {metadata.symbol}
-                            </p>
-                            <p>
-                                <strong>Fee Recipient:</strong>{" "}
-                                {metadata.fee_recipient}
-                            </p>
-                            <p>
-                                <strong>Seller Fee Basis Points:</strong>{" "}
-                                {metadata.seller_fee_basis_points}
-                            </p>
+                {nftMetadataLoading ||
+                    (marketMetadataLoading && (
+                        <div className="text-center">
+                            Loading Contract Info..
                         </div>
-                        <h2 className="font-bold text-xl mt-4">
-                            Contract Owner
-                        </h2>
-                        <p className="pl-4">{ownerAddress}</p>
-                    </div>
+                    ))}
+                {market_metadata && (
+                    <ContractMetadata
+                        title={"NFT Marketplace Contract Metadata"}
+                        metadata={market_metadata as Metadata}
+                    />
+                )}
+                {nft_metadata && (
+                    <ContractMetadata
+                        title={"NFT Collection Contract Metadata"}
+                        metadata={nft_metadata as Metadata}
+                    />
                 )}
             </div>
         </Layout>

@@ -1,5 +1,9 @@
 export type MintMetadata = {
-    image: string;
-    name: string;
-    description: string;
+    metadata: {
+        image: string;
+        name: string;
+        description: string;
+    };
+    to: string;
+    supply: 1;
 };

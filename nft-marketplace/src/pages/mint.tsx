@@ -1,6 +1,7 @@
-import { useNFTContract } from "@/hooks/useNFTContract";
 import Layout from "@/layout/Layout";
 import { MintMetadata } from "@/types/mintMetadata";
+import { getNFTContract } from "@/util/getContracts";
+import { useAddress, useMintNFT } from "@thirdweb-dev/react";
 import { useState } from "react";
 
 export default function Wallet() {
@@ -8,7 +9,11 @@ export default function Wallet() {
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [mintMessage, setMintMessage] = useState("");
-    const { mintNFTs } = useNFTContract();
+
+    const { nft_contract } = getNFTContract();
+
+    const { mutate: mintNFT, isLoading } = useMintNFT(nft_contract);
+    const address = useAddress();
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -25,22 +30,28 @@ export default function Wallet() {
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-        setMintMessage("Minting in progress...");
-        event.preventDefault();
-        const metadata: MintMetadata = {
-            name,
-            description,
-            image,
-        };
+        try {
+            event.preventDefault();
 
-        let metadatas = [];
-        metadatas.push(metadata);
+            if (name === "" || description === "" || image === "") {
+                setMintMessage("Empty fields not allowed");
+                return;
+            }
 
-        let res = await mintNFTs(metadatas);
-        if (res.errorMessage) {
-            setMintMessage(res.errorMessage);
-        } else {
-            setMintMessage(`Mint NFT with id ${res.firstTokenId} successful`);
+            const metadata: MintMetadata = {
+                metadata: {
+                    name,
+                    description,
+                    image,
+                },
+                to: address ?? "",
+                supply: 1,
+            };
+
+            mintNFT(metadata);
+        } catch (e) {
+            console.log("Error Minting", e);
+            setMintMessage("Error minting nft");
         }
     };
     return (
@@ -89,7 +100,7 @@ export default function Wallet() {
                             />
                         </div>
                         <button
-                            className="mt-6 bg-blue-500 bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
+                            className="mt-6 bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             type="submit"
                         >
                             Mint
@@ -97,6 +108,11 @@ export default function Wallet() {
                     </form>
                     {mintMessage !== "" && (
                         <div className="text-center mt-4">{mintMessage}</div>
+                    )}
+                    {isLoading && (
+                        <div className="text-center mt-4">
+                            Minting in progress ...
+                        </div>
                     )}
                 </div>
             </div>

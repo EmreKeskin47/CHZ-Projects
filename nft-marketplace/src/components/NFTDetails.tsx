@@ -1,5 +1,6 @@
+import { ThirdwebNftMedia } from "@thirdweb-dev/react";
+import { NFT } from "@thirdweb-dev/sdk";
 import React, { FC } from "react";
-import { NFT } from "@/types/nft";
 
 const NFTDetails: FC<NFT> = (nft) => {
     return (
@@ -8,10 +9,10 @@ const NFTDetails: FC<NFT> = (nft) => {
                 <h2 className="text-2xl font-bold">{nft.metadata.name}</h2>
                 <h2 className="text-2xl font-bold ">{`ID:${nft.metadata.id}`}</h2>
             </div>
-            <img
-                src={nft.metadata.image}
-                alt={nft.metadata.name}
-                className="mb-4 w-full h-72 object-cover rounded-md"
+            <ThirdwebNftMedia
+                metadata={nft.metadata}
+                height={"100%"}
+                width={"100%"}
             />
             <div className="mb-2 text-center">
                 <strong>{nft.metadata.description}</strong>
