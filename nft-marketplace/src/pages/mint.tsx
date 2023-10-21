@@ -8,11 +8,10 @@ export default function Wallet() {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
-    const [mintMessage, setMintMessage] = useState("");
 
     const { nft_contract } = getNFTContract();
 
-    const { mutate: mintNFT, isLoading } = useMintNFT(nft_contract);
+    const { mutate: mintNFT, isLoading, error } = useMintNFT(nft_contract);
     const address = useAddress();
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +33,6 @@ export default function Wallet() {
             event.preventDefault();
 
             if (name === "" || description === "" || image === "") {
-                setMintMessage("Empty fields not allowed");
                 return;
             }
 
@@ -51,7 +49,6 @@ export default function Wallet() {
             mintNFT(metadata);
         } catch (e) {
             console.log("Error Minting", e);
-            setMintMessage("Error minting nft");
         }
     };
     return (
@@ -106,10 +103,13 @@ export default function Wallet() {
                             Mint
                         </button>
                     </form>
-                    {mintMessage !== "" && (
-                        <div className="text-center mt-4">{mintMessage}</div>
-                    )}
+
                     {isLoading && (
+                        <div className="text-center mt-4">
+                            Minting in progress ...
+                        </div>
+                    )}
+                    {(error as unknown as boolean) && (
                         <div className="text-center mt-4">
                             Minting in progress ...
                         </div>
