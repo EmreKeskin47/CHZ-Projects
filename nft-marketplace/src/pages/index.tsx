@@ -1,12 +1,14 @@
 import ListingCard from "@/components/ListingCard";
 import Layout from "@/layout/Layout";
+import { getMarketplaceAddress } from "@/util/getContractAddress";
 import { useContract, useValidDirectListings } from "@thirdweb-dev/react";
 
 function Home() {
     const { contract: marketplace } = useContract(
-        process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS,
+        getMarketplaceAddress(),
         "marketplace-v3"
     );
+
     const { data: directListings, isLoading } = useValidDirectListings(
         marketplace,
         {
@@ -19,7 +21,7 @@ function Home() {
         <Layout>
             {isLoading ? (
                 <div className="text-center">
-                    Loading NFT Marketplace Data..
+                    Loading NFT marketplace data ...
                 </div>
             ) : (
                 <div>
@@ -32,7 +34,7 @@ function Home() {
                             {directListings &&
                                 directListings.map((listedNFT, id) => {
                                     return (
-                                        <ListingCard key={id} {...listedNFT} />
+                                        <ListingCard {...listedNFT} key={id} />
                                     );
                                 })}
                         </div>

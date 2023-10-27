@@ -10,6 +10,7 @@ const NFTCard: FC<NFT> = (nft) => {
                     metadata={nft.metadata}
                     height={"100%"}
                     width={"100%"}
+                    style={{ maxHeight: 300 }}
                 />
 
                 <div className="h-24 bottom-0 left-0 right-0 opacity-75">

@@ -13,6 +13,7 @@ const NFTDetails: FC<NFT> = (nft) => {
                 metadata={nft.metadata}
                 height={"100%"}
                 width={"100%"}
+                style={{ maxHeight: 450 }}
             />
             <div className="mb-2 text-center">
                 <strong>{nft.metadata.description}</strong>

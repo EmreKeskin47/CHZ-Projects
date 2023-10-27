@@ -6,11 +6,11 @@ import { getMarketplaceContract } from "@/util/getContracts";
 
 const ListingCard: FC<DirectListingV3> = (nft) => {
     const [message, setMessage] = useState("");
+    const nft_address = getNFTAddress();
+    const { marketplace } = getMarketplaceContract();
 
-    let nft_address = getNFTAddress();
     const address = useAddress();
 
-    const { marketplace } = getMarketplaceContract();
     const { data: directListing } = useValidDirectListings(marketplace, {
         tokenContract: nft_address,
         tokenId: nft.asset.id,
@@ -19,19 +19,20 @@ const ListingCard: FC<DirectListingV3> = (nft) => {
     const handleListing = async () => {
         try {
             if (directListing && directListing[0].creatorAddress !== address) {
-                setMessage("Buying...");
+                setMessage("Buying ...");
                 let res = await marketplace?.directListings.buyFromListing(
                     directListing[0].id,
                     1
                 );
 
                 if (res && res.receipt) {
-                    setMessage("Bought!");
+                    setMessage("Bought");
                 }
             } else {
                 setMessage("Already yours");
             }
         } catch (e) {
+            setMessage("Error Buying!");
             console.log("Error buying", e);
         }
     };
@@ -42,7 +43,7 @@ const ListingCard: FC<DirectListingV3> = (nft) => {
                 src={nft.asset.image ?? ""}
                 alt="nft_img"
                 className="w-full h-64 object-contain rounded-md z-0"
-                style={{ minHeight: "100%", minWidth: "100%" }}
+                style={{ minWidth: "100%", minHeight: "100% " }}
             />
 
             <div className="absolute bg-gray-800 bottom-0 left-0 right-0 opacity-90">
@@ -53,9 +54,7 @@ const ListingCard: FC<DirectListingV3> = (nft) => {
                     <p className="text-gray-400">{nft.asset.description}</p>
                     <div className="flex justify-between mt-2">
                         <div>
-                            <p className="text-gray-400">
-                                {`for ${nft.currencyValuePerToken.displayValue} ${nft.currencyValuePerToken.symbol}`}
-                            </p>
+                            <p className="text-gray-400">{`for ${nft.currencyValuePerToken.displayValue} ${nft.currencyValuePerToken.symbol}`}</p>
                             {message !== "" && <p>{message}</p>}
                         </div>
                         <button
