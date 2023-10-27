@@ -1,6 +1,6 @@
-# NFT Marketplace Complete
+# NFT Marketplace Template
 
-Complete version of the NFT Marketplace in CHZ network, using Thirdweb
+This repository provides a template for creating an NFT Marketplace interface. It encompasses the frontend HTML/CSS structure, deliberately excluding any backend logic or smart contract integrations.
 
 ## Configuration Process
 
