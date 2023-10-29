@@ -9,31 +9,48 @@ export function useTokenMetadata() {
     const [loading, setLoading] = useState(true);
     const [tokens, setTokens] = useState<TokenData[]>([]);
 
-    const fetchTokenMetadatas = useCallback(async () => {
+    const fetchTokenMetadata = useCallback(async () => {
         try {
             if (!Moralis.Core.isStarted) {
-                await Moralis.start({
-                    apiKey,
-                });
+                await Moralis.start({ apiKey });
             }
 
-            const response = await Moralis.EvmApi.token.getTokenMetadata({
-                addresses: token_address_list,
-                chain: current_chain,
+            // const token_metadatas = await Moralis.EvmApi.token.getTokenMetadata(
+            //     {
+            //         addresses: token_address_list,
+            //         chain: "chiliz",
+            //     }
+            // );
+            // setTokens(token_metadatas.toJSON());
+
+            const baseUrl = `https://deep-index.moralis.io/api/v2.2/erc20/metadata?chain=${current_chain}`;
+
+            let fullUrl = baseUrl;
+            token_address_list.forEach((address, index) => {
+                const addressParam = `&addresses%5B${index}%5D=${address}`;
+                fullUrl += addressParam;
             });
 
-            setTokens(response.toJSON());
+            const response = await fetch(fullUrl, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "X-API-Key": apiKey,
+                },
+            });
+            const data = await response.json();
+            setTokens(data);
         } catch (e) {
-            console.error("Error fetching data", e);
-            setMessage("Error fetching data");
+            setMessage("Error fetching token metadata");
+            console.log("Error fetching token metadata", e);
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        fetchTokenMetadatas();
-    }, [fetchTokenMetadatas]);
+        fetchTokenMetadata();
+    }, [fetchTokenMetadata]);
 
     return {
         message,

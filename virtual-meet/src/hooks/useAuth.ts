@@ -1,25 +1,27 @@
+import { useAppContext } from "@/contexts/AppContext";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { useAppContext } from "@/contexts/AppContext";
 
 export function useAuth() {
     const { address, isConnected } = useAccount();
+
+    const { setAddress, setIsConnected } = useAppContext();
     const { connect } = useConnect({
         connector: new InjectedConnector(),
     });
-    const { disconnect } = useDisconnect();
-    const { setAddress, setIsConnected } = useAppContext();
 
+    const { disconnect } = useDisconnect();
     const handleConnect = async () => {
         try {
             if (isConnected) {
                 await handleDisconnect();
             }
+
             await connect();
             setAddress(address ?? "");
             setIsConnected(isConnected);
-        } catch (error) {
-            console.log("Error connecting: " + error);
+        } catch (e) {
+            console.log("Error connecting: " + e);
         }
     };
 
@@ -28,8 +30,8 @@ export function useAuth() {
             await disconnect();
             setAddress(address ?? "");
             setIsConnected(isConnected);
-        } catch (error) {
-            console.log("Error connecting: " + error);
+        } catch (e) {
+            console.log("Error disconnecting: " + e);
         }
     };
 

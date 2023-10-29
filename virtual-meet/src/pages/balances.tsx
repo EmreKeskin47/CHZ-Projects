@@ -48,7 +48,6 @@ const TokenCard: FC<TokenBalance> = (token) => {
 
 function BalancesPage() {
     const { message, tokenBalances, loading, nativeBalance } = useBalances();
-
     if (message) return <p>{message}</p>;
     return (
         <main className={styles.main}>
@@ -68,13 +67,18 @@ function BalancesPage() {
                                 )} `}
                             </h2>
                             <div className=" mx-4 my-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-                                {tokenBalances.map((token, id) => {
-                                    return (
-                                        <div className="w-full h-full" key={id}>
-                                            <TokenCard {...token} />
-                                        </div>
-                                    );
-                                })}
+                                {tokenBalances &&
+                                    Array.isArray(tokenBalances) &&
+                                    tokenBalances.map((token, id) => {
+                                        return (
+                                            <div
+                                                className="w-full h-full"
+                                                key={id}
+                                            >
+                                                <TokenCard {...token} />
+                                            </div>
+                                        );
+                                    })}
                             </div>
                         </div>
                     )}

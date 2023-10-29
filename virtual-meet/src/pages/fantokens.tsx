@@ -74,13 +74,14 @@ function FanTokensListPage() {
                 Fan Tokens
             </h1>
             <div className=" mx-4 my-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-                {tokens.map((token, id) => {
-                    return (
-                        <div className="w-full h-full" key={id}>
-                            <TokenCard {...token} />
-                        </div>
-                    );
-                })}
+                {tokens &&
+                    tokens.map((token, id) => {
+                        return (
+                            <div className="w-full h-full" key={id}>
+                                <TokenCard {...token} />
+                            </div>
+                        );
+                    })}
             </div>
 
             <BackToHub />

@@ -12,7 +12,7 @@ function MeetingPage() {
         nativeBalance && Number(nativeBalance.balance) > 0
             ? formatBalance(nativeBalance.balance)
             : 0;
-    const eligible = Number(native) > 0;
+    const isEligible = Number(native) > 0;
     const countdownDate = new Date("2023-12-31T23:59:59");
 
     if (message) return <p>{message}</p>;
@@ -35,7 +35,7 @@ function MeetingPage() {
                         </div>
                         <div className="my-4">{`Your native balance is ${native}`}</div>
                         <div className="my-4 ">
-                            {`YOU ARE ${eligible ? "" : "NOT"} ELIGIBLE`}
+                            {`YOU ARE ${isEligible ? "" : "NOT"} ELIGIBLE`}
                         </div>
                     </h2>
 

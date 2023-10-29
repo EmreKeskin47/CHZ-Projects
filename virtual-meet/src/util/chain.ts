@@ -1,3 +1,2 @@
-import { EvmChain } from "moralis/common-evm-utils";
-
-export const current_chain = EvmChain.BSC_TESTNET;
+export const current_chain = "chiliz";
+export const current_chain_testnet = "0x15b32";
